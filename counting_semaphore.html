@@ -1,230 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+#include<stdio.h>
+int main()
+{
+int bt[20],p[20],wt[20],tat[20],i,j,n,total=0,pos,temp;
+float avg_wt,avg_tat;
+printf("Enter number of process:");
+scanf("%d",&n);
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counting Simaphore</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+printf("nEnter Burst Time:n");
+for(i=0;i<n;i++)
+{
+printf("p%d:",i+1);
+scanf("%d",&bt[i]);
+p[i]=i+1;
+}
 
-        #user_inp {
-            display: block;
-            flex-direction: column;
-            width: 20%;
-            margin: 50px 50px;
-        }
+//sorting of burst times
+for(i=0;i<n;i++)
+{
+pos=i;
+for(j=i+1;j<n;j++)
+{
+if(bt[j]<bt[pos])
+pos=j;
+}
 
-        #user_inp>input {
-            margin-top: 5px;
-            text-align: center;
-            border-radius: 0px;
-        }
+temp=bt[i];
+bt[i]=bt[pos];
+bt[pos]=temp;
 
-        #user_inp>button {
-            margin: auto;
-            margin-top: 10px;
-            border-radius: 0px;
-            width: 40%;
-            color: white;
-        }
+temp=p[i];
+p[i]=p[pos];
+p[pos]=temp;
+}
 
-        .ent-section {
-            float: left;
-            margin: 15px;
-            border-radius: 0px;
-            border-bottom: 5px solid #000;
-            transition: border-bottom 0.4s;
-        }
-
-        .cs-section {
-            float: left;
-            margin: 15px;
-            border-radius: 0px;
-            border-bottom: 5px solid #000;
-            transition: border-bottom 0.4s;
-        }
-
-        .ext-section {
-            float: left;
-            margin: 15px;
-            border-radius: 0px;
-            border-bottom: 5px solid #000;
-            transition: border-bottom 0.4s;
-        }
-
-        .semaphore {
-            border: 0px solid;
-        }
-    </style>
-</head>
-
-<body style="color: blanchedalmond; background-color: #3f3f3f;">
-    <div class="heading mt-4 text-center">
-        <h1>COUNTING SEMAPHORE</h1>
-    </div>
-    <div class="container w-100" style="color: #EFEF8F;">
-        <div id="pro" style="border-top:5px groove rgb(131, 121, 121)">
-            <div id="user_inp m-0 p-0 text-center">
-                <div class="row">
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        <div class="row mt-5">
-                            <div class="col-4">
-                                <input type="text" name="process" id="p_no" placeholder="  Number of processes"
-                                    class="form-control">
-                            </div>
-                            <div class="col-4">
-                                <input type="text" name="semaphore" id="sema" placeholder="  Max value of semaphore"
-                                    class="form-control">
-                            </div>
-                            <div class="col-4">
-                                <button class="btn btn-primary btn-sm" id="begin">Start</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container mt-4">
-        <div class="row d-flex justify-content-center" id="processes">
-
-        </div>
-    </div>
-
-    <div class="container-fluid p-4" style="color: #EFEF8F;">
-        <div class="row">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-6">
-                <div class="ent-section">
-                    <div class="p-4">
-                        <h4>Entry Section</h4>
-                        <div id="ShowEntry" class="text-secondary"></div>
-                    </div>
-                </div>
-                <div class="cs-section">
-                    <div class="p-4">
-                        <h4>Crititcal section</h4>
-                        <div id="showCritical" class="text-danger"></div>
-                    </div>
-                </div>
-                <div class="ext-section">
-                    <div class="p-4">
-                        <h4>Exit Section</h4>
-                        <div id="showExit" class="text-success"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mt-4 pt-4" style="color: #EFEF8F;">
-        <div class="row">
-            <div class="col-5">
-            </div>
-            <div class="col-3">
-                <div class="semaphore">
-                    <div class="text-center">
-                        <h4>Semaphore Structure</h4>
-                        <h4>Semaphore value = <span id="svalue" style="color: #33FF66;"></span></h4>
-                        <div style="border-bottom: 5px solid black; padding: 5px;"></div>
-                        <div>
-                            <p style="font-weight: 600; font-size: 20px;">Process in blocked state</p>
-                            <div id="blocked-process" style="color:#CC0000;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-1"></div>
-        </div>
-    </div>
+wt[0]=0;
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+for(i=1;i<n;i++)
+{
+wt[i]=0;
+for(j=0;j<i;j++)
+wt[i]+=bt[j];
 
-    <script>
-        $(document).ready(function () {
-            $("#begin").click(function () {
-                let process = '';
-                let p_no = $("#p_no").val();
-                let svalue = $("#sema").val();
-                let entry = [];
-                let critical = [];
-                let exit = [];
-                let queue = [];
-                for (let i = 0; i < p_no; i++) {
-                    process += '<div class="col-lg-2"><button class="btn btn-primary btn-sm" id="process' + i + '">Process ' + i + '</button></div>'
-                }
-                $("#processes").html(process);
-                $('#blocked-process').text(queue);
-                $('#svalue').text(svalue);
+total+=wt[i];
+}
 
-                for (let i = 0; i < p_no; i++) {
-                    $('#process' + i).click(function (e) {
-                        e.preventDefault();
-                        runProcess('Process ' + i);
-                    });
-                }
+avg_wt=(float)total/n;
+total=0;
 
-                function runProcess(msg) {
-                    let no = parseInt(msg[8]);
-                    $('#process' + no).hide();
-                    if (svalue > 0) {
-                        svalue--;
-                        $('#svalue').text(svalue);
-                        entry.push(msg);
-                        $('#ShowEntry').text(entry);
-                        setTimeout(() => {
-                            entry = $.grep(entry, function (value) {
-                                return value != msg;
-                            });
-                            $('#ShowEntry').text(entry);
-                            critical.push(msg);
-                            $('#showCritical').text(critical);
-                            setTimeout(() => {
-                                critical = $.grep(critical, function (value) {
-                                    return value != msg;
-                                });
-                                $('#showCritical').text(critical);
-                                exit.push(msg);
-                                $('#showExit').text(exit);
-                                setTimeout(() => {
-                                    exit = $.grep(exit, function (value) {
-                                        return value != msg;
-                                    });
-                                    $('#showExit').text(exit);
-                                    svalue++;
-                                    $('#svalue').text(svalue);
-                                    if (queue.length != 0) {
-                                        let new_process = queue.shift()
-                                        $('#blocked-process').text(queue);
-                                        runProcess(new_process);
-                                    }
-                                }, 1500);
-                            }, 4000);
-                        }, 2000);
-                    }
-                    else if (svalue === 0) {
-                        queue.push(msg);
-                        $('#blocked-process').text(queue);
-                    }
-                }
-            })
-        });
-    </script>
+printf("nProcesst Burst Time tWaiting TimetTurnaround Time");
+for(i=0;i<n;i++)
+{
+tat[i]=bt[i]+wt[i];
+total+=tat[i];
+printf("np%dtt %dtt %dttt%d",p[i],bt[i],wt[i],tat[i]);
+}
 
-</body>
-
-</html>
+avg_tat=(float)total/n;
+printf("nnAverage Waiting Time=%f",avg_wt);
+printf("nAverage Turnaround Time=%fn",avg_tat);
