@@ -1,237 +1,145 @@
-<!DOCTYPE html>
-<html lang="en">
+<script>
+ 
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binary Simaphore</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    // JavaScript program for implementation of FCFS 
 
-        .ent-section {
-            float: left;
-            margin: 15px;
-            border-bottom: 2px solid #000;
-            transition: border-bottom 0.4s;
-        }
+   // scheduling
 
-        .cs-section {
-            float: left;
-            margin: 15px;
-            border-bottom: 2px solid #000;
-            transition: border-bottom 0.4s;
-        }
-
-        .ext-section {
-            float: left;
-            margin: 15px;
-            border-bottom: 2px solid #000;
-            transition: border-bottom 0.4s;
-
-        }
-
-        .semaphore {
-            border: 3px solid #555;
-        }
-    </style>
-</head>
-
-<body>
-
-    <body style="background-color:#3f3f3f; color: blanchedalmond;" class="text-center">
-        <div class="heading mt-4">
-            <h1>BINARY SEMAPHORE</h1>
-        </div>
-        <div class="container">
-            <div id="pro" style="border-top:5px groove rgb(131, 121, 121)">
-                <br>
-            </div>
-        </div>
-        <div class="container-fluid p-4">
-            <div class="row" style="margin-left: 170px; color: #EFEF8F;">
-                <div class="col-xs-2 col-2" >
-                    <button class="btn btn-primary btn-sm" id="process1">
-                        Process 1
-                    </button><br><br>
-                </div>
-                <div class="col-xs-2 col-2">
-                    <button class="btn btn-primary btn-sm" id="process2">
-                        Process 2
-                    </button><br><br>
-                </div>
-                <div class="col-xs-2 col-2">
-                    <button class="btn btn-primary btn-sm" id="process3">
-                        Process 3
-                    </button><br><br>
-                </div>
-                <div class="col-xs-2 col-2">
-                    <button class="btn btn-primary btn-sm" id="process4">
-                        Process 4
-                    </button><br><br>
-                </div>
-                <div class="col-xs-2 col-2">
-                    <button class="btn btn-primary btn-sm" id="process5">
-                        Process 5
-                    </button><br><br>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-4"></div>
-                    <div class="col-6">
-                        <div class="ent-section">
-                            <div class="p-4">
-                                Entry Section
-                                <div id="ShowEntry" class="text-secondary"></div>
-                            </div>
-                        </div>
     
-                        <div class="cs-section">
-                            <div class="p-4">
-                                Crititcal section
-                                <div id="showCritical" class="text-danger"></div>
-                            </div>
-                        </div>
+
     
-                        <div class="ext-section">
-                            <div class="p-4">
-                                Exit Section
-                                <div id="showExit" class="text-success"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
 
-        <div class="container mt-4 pt-4" style="color: #EFEF8F;">
-            <div class="row">
-                <div class="col-5">
+   // Function to find the waiting time for all 
 
-                </div>
-                <div class="col-3">
-                    <div class="semaphore">
-                        <div class="text-center">
-                            Semaphore Structure
+  // processes
 
-                            <h6>Semaphore value = <span id="svalue" style="color: #33FF66;"></span></h6>
+    function findWaitingTime(processes,n,bt,wt)
 
-                            <div style="border-bottom: 1px solid; padding: 5px;"></div>
+    {
 
-                            <div>
-                                <p>Process in blocked state</p>
-                                <div id="blocked-process" style="color:#CC0000;">
+        // waiting time for first process is 0 
 
-                                </div>
-                            </div>
+        wt[0] = 0;
 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-1"></div>
-            </div>
-        </div>
+   
 
+        // calculating waiting time 
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
-        <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+        for (let i = 1; i < n; i++) {
 
-        <script>
-            $(document).ready(function () {
-                let svalue = 1;
-                let queue = 'EMPTY';
-                $('#blocked-process').text(queue);
-                $('#svalue').text(svalue);
+            wt[i] = bt[i - 1] + wt[i - 1];
 
-                $('#process1').click(function (e) {
-                    e.preventDefault();
-                    runProcess('Process 1');
-                });
+        }
 
-                $('#process2').click(function (e) {
-                    e.preventDefault();
-                    runProcess('Process 2');
-                });
+    }
 
-                $('#process3').click(function (e) {
-                    e.preventDefault();
-                    runProcess('Process 3');
-                });
+     
 
-                $('#process4').click(function (e) {
-                    e.preventDefault();
-                    runProcess('Process 4');
-                });
+    function findTurnAroundTime(processes,n,bt,wt,tat)
 
-                $('#process5').click(function (e) {
-                    e.preventDefault();
-                    runProcess('Process 5');
-                });
-                function runProcess(msg) {
-                    if (svalue === 1) {
-                        svalue = 0;
-                        $('#svalue').text(svalue);
-                        if (msg === 'Process 1') {
-                            $('#process1').hide();
-                        } else if (msg === 'Process 2') {
-                            $('#process2').hide();
-                        }
-                        else if (msg === 'Process 3') {
-                            $('#process3').hide();
-                        }
-                        else if (msg === 'Process 4') {
-                            $('#process4').hide();
-                        }
-                        else if (msg === 'Process 5') {
-                            $('#process5').hide();
-                        }
-                        $('#ShowEntry').text(msg);
-                        setTimeout(() => {
-                            $('#ShowEntry').text('');
-                            $('#showCritical').text(msg);
-                            setTimeout(() => {
-                                $('#showCritical').text('');
-                                $('#showExit').text(msg);
-                                setTimeout(() => {
-                                    $('#showExit').text('');
-                                    $('#showCritical').text('');
-                                    svalue = 1;
-                                    $('#svalue').text(svalue);
-                                    if (queue !== 'EMPTY') {
-                                        if (queue === 'Process 1') {
-                                            $('#blocked-process').text('');
-                                            runProcess('Process 1');
-                                            queue = 'EMPTY';
-                                        } else if (queue === 'Process 2') {
-                                            $('#blocked-process').text('');
-                                            runProcess('Process 2');
-                                            queue = 'EMPTY';
-                                        }
-                                        svalue = 0;
-                                        $('#svalue').text(svalue);
-                                        $('#blocked-process').text(queue);
-                                    }
-                                }, 2000);
-                            }, 4000);
-                        }, 1000);
-                    } else if (svalue === 0) {
-                        queue = msg;
-                        $('#blocked-process').html('<b>' + queue + '</b>');
-                    }
-                }
-            });
-        </script>
+    {
 
-    </body>
+        // calculating turnaround time by adding 
 
-</html>
+        // bt[i] + wt[i] 
+
+        for (let i = 0; i < n; i++) {
+
+            tat[i] = bt[i] + wt[i];
+
+        }
+
+    }
+
+     
+
+    function findavgTime(processes,n,bt)
+
+    {
+
+        let wt = new Array(n), tat = new Array(n);
+
+        for(let i=0;i<n;i++)
+
+        {
+
+            wt[i]=0;
+
+            tat[i]=0;
+
+        }
+
+        let total_wt = 0, total_tat = 0;
+
+   
+
+        //Function to find waiting time of all processes 
+
+        findWaitingTime(processes, n, bt, wt);
+
+   
+
+        //Function to find turn around time for all processes 
+
+        findTurnAroundTime(processes, n, bt, wt, tat);
+
+   
+
+        //Display processes along with all details 
+
+        document.write("Processes Burst time Waiting"
+
+                       +" time Turn around time<br>");
+
+   
+
+        // Calculate total waiting time and total turn 
+
+        // around time 
+
+        for (let i = 0; i < n; i++) {
+
+            total_wt = total_wt + wt[i];
+
+            total_tat = total_tat + tat[i];
+
+            document.write("    ", (i + 1)+" ");
+
+            document.write("     "+  bt[i]+" ");
+
+            document.write("     "+ wt[i]);
+
+            document.write("     "+ tat[i]+"<br>");
+
+        }
+
+        let s = total_wt / n;
+
+        let t = Math.floor(total_tat / n);
+
+        document.write("Average waiting time = "+ s);
+
+        document.write("<br>");
+
+        document.write("Average turn around time = ", t+" ");
+
+    }
+
+     
+
+    let processes=[1,2,3];
+
+    let  n = processes.length;
+
+     
+
+    let burst_time=[10,5,8];
+
+    findavgTime(processes, n, burst_time);
+
+     
+
+    
+
+     
+</script>
