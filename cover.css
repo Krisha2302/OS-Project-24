@@ -1,66 +1,61 @@
-/*
- * Globals
- */
+#include<stdio.h>
+int main()
+{
+int bt[20],p[20],wt[20],tat[20],i,j,n,total=0,pos,temp;
+float avg_wt,avg_tat;
+printf("Enter number of process:");
+scanf("%d",&n);
 
-
-/* Custom default button */
-.btn-secondary,
-.btn-secondary:hover,
-.btn-secondary:focus {
-  color: #333;
-  text-shadow: none; /* Prevent inheritance from `body` */
+printf("nEnter Burst Time:n");
+for(i=0;i<n;i++)
+{
+printf("p%d:",i+1);
+scanf("%d",&bt[i]);
+p[i]=i+1;
 }
 
-
-/*
- * Base structure
- */
-.class{
-  background-color: rgba(245, 245, 245, 1);
-  opacity: .4;
-}
-body { 
-  background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(1.jpg) no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-.card{
-  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
-}
-.cover-container {
-  max-width: 50em;
+//sorting of burst times
+for(i=0;i<n;i++)
+{
+pos=i;
+for(j=i+1;j<n;j++)
+{
+if(bt[j]<bt[pos])
+pos=j;
 }
 
+temp=bt[i];
+bt[i]=bt[pos];
+bt[pos]=temp;
 
-/*
- * Header
- */
-
-.nav-masthead .nav-link {
-  padding: .25rem 0;
-  font-weight: 700;
-  color: rgba(255, 255, 255, .5);
-  background-color: transparent;
-  border-bottom: .25rem solid transparent;
+temp=p[i];
+p[i]=p[pos];
+p[pos]=temp;
 }
 
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
-  border-bottom-color: rgba(255, 255, 255, .25);
+wt[0]=0;
+
+
+for(i=1;i<n;i++)
+{
+wt[i]=0;
+for(j=0;j<i;j++)
+wt[i]+=bt[j];
+
+total+=wt[i];
 }
 
-.nav-masthead .nav-link + .nav-link {
-  margin-left: 1rem;
+avg_wt=(float)total/n;
+total=0;
+
+printf("nProcesst Burst Time tWaiting TimetTurnaround Time");
+for(i=0;i<n;i++)
+{
+tat[i]=bt[i]+wt[i];
+total+=tat[i];
+printf("np%dtt %dtt %dttt%d",p[i],bt[i],wt[i],tat[i]);
 }
 
-.nav-masthead .active {
-  color: #fff;
-  border-bottom-color: #fff;
-}
-
-.container {
-  flex-wrap: wrap-reverse;
-}
+avg_tat=(float)total/n;
+printf("nnAverage Waiting Time=%f",avg_wt);
+printf("nAverage Turnaround Time=%fn",avg_tat);
